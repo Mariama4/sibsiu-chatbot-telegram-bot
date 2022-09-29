@@ -10,13 +10,13 @@ async def frameQualifier(frame, message, state):
                 return value['REDIRECT_ON_ID_FRAME']
 
 
-def messageController(database, data, message, state):
+def messageController(database, data, message, state, bot):
     # Определение типа сообщения
     match data['MESSAGE']['TYPE']:
         case "TEXT":
             return textMessageController(database, data, message)
         case "PHOTO":
-            pass
+            return photoMessageController(database, data, message, bot)
         case _:
             # not found
             pass
@@ -26,6 +26,16 @@ def textMessageController(database, data, message):
     keyboard = keyboardController(data['BUTTONS'])
     return message.answer(text=data['MESSAGE']['TEXT'],
                           reply_markup=keyboard)
+
+
+def photoMessageController(database, data, message, bot):
+    keyboard = keyboardController(data['BUTTONS'])
+    return bot.send_photo(
+        chat_id=message.chat.id,
+        caption=data['MESSAGE']['CAPTION'],
+        photo=data['MESSAGE']['PHOTO_URL'],
+        reply_markup=keyboard
+    )
 
 
 def keyboardController(buttons):

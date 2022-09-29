@@ -35,7 +35,7 @@ async def start(message: types.Message):
     state = dp.current_state(user=message.from_user.id)
     await state.set_state("start")
     data = frame.frames.get('start')
-    await messageController(database=db, data=data, message=message, state=state)
+    await messageController(database=db, data=data, message=message, state=state, bot=bot)
 
 
 @dp.message_handler(state=FRAMES_ID_FOR_STATES)
@@ -44,7 +44,7 @@ async def echo(message: types.Message):
     idFrame = await frameQualifier(frame=frame, message=message, state=state)
     await state.set_state(idFrame)
     data = frame.frames.get(idFrame)
-    await messageController(database=db, data=data, message=message, state=state)
+    await messageController(database=db, data=data, message=message, state=state, bot=bot)
 
 
 @dp.message_handler()
