@@ -26,9 +26,6 @@ def onStart():
     db.login(url=os.getenv('API_URL_LOGIN'))
     # GET CONFIG FROM API
     configuration = Config(database=db, url=os.getenv('API_URL_CONFIGURATION'))
-    # UPDATE STATUS
-    configuration.setStatus(True)
-    configuration.updateStatus(url=os.getenv('API_URL_CONFIGURATION_UPDATE_STATUS'))
     # GET TOKEN FOR CONNECT TO BOT
     API_TOKEN = configuration.getToken()
     # Initialize bot and dispatcher
@@ -52,9 +49,7 @@ DATABASE, CONFIGURATION, BOT, \
 
 
 def onStop():
-    # UPDATE BOT STATUS
-    CONFIGURATION.setStatus(False)
-    CONFIGURATION.updateStatus(url=os.getenv('API_URL_CONFIGURATION_UPDATE_STATUS'))
+    pass
 
 
 @DISPATCHER.message_handler(commands=['start'])

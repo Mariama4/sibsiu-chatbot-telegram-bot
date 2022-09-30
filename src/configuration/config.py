@@ -11,14 +11,4 @@ class Config:
     def getToken(self):
         return self._token
 
-    def setStatus(self, status):
-        self._status = status
-
-    def updateStatus(self, url):
-        response = self._database.patch(
-            url=self._url + url,
-            json={'id': f'{self._id}',
-                  'status': f'{self._status}'}
-        )
-
 
