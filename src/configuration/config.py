@@ -1,5 +1,3 @@
-import json
-
 class Config:
     def __init__(self, database, url):
         self._database = database
@@ -22,6 +20,5 @@ class Config:
             json={'id': f'{self._id}',
                   'status': f'{self._status}'}
         )
-        print(response)
 
 

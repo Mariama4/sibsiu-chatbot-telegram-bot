@@ -1,5 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ParseMode, CallbackQuery, ContentType, \
     ChatActions, ReplyKeyboardMarkup
+from aiogram import types
 
 
 async def frameQualifier(frame, message, state):
@@ -17,6 +18,8 @@ def messageController(database, data, message, state, bot):
             return textMessageController(database, data, message)
         case "PHOTO":
             return photoMessageController(database, data, message, bot)
+        case "MEDIA_GROUP":
+            return mediaGroupMessageController(data, message, bot)
         case _:
             # not found
             pass
@@ -36,6 +39,23 @@ def photoMessageController(database, data, message, bot):
         photo=data['MESSAGE']['PHOTO_URL'],
         reply_markup=keyboard
     )
+
+
+async def mediaGroupMessageController(data, message, bot):
+    keyboard = keyboardController(data['BUTTONS'])
+    mediaGroup = mediaGroupController(data['MESSAGE']['MEDIA'])
+    await bot.send_media_group(chat_id=message.chat.id,
+                               media=mediaGroup)
+    return await message.answer(text=data['MESSAGE']['CAPTION'],
+                                reply_markup=keyboard)
+
+
+def mediaGroupController(media):
+    mediaGroup = types.MediaGroup()
+    for index, value in enumerate(media):
+        mediaGroup.attach_photo(value['URL'])
+
+    return mediaGroup
 
 
 def keyboardController(buttons):
