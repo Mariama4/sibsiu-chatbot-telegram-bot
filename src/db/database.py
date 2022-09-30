@@ -48,3 +48,11 @@ class Database:
             json=json
         )
         return response.json()
+
+    def patch(self, url, json=None):
+        response = requests.patch(
+            url=self._url + url,
+            headers=self._headers,
+            json=json
+        )
+        return response.json()
