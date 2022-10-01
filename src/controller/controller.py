@@ -1,5 +1,4 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ParseMode, CallbackQuery, ContentType, \
-    ChatActions, ReplyKeyboardMarkup
+from aiogram.types import ReplyKeyboardMarkup, InputFile
 from aiogram import types
 
 
@@ -20,6 +19,10 @@ def messageController(database, data, message, state, bot):
             return photoMessageController(database, data, message, bot)
         case "MEDIA_GROUP":
             return mediaGroupMessageController(data, message, bot)
+        case "VIDEO_NOTE":
+            return videoNoteMessageController(data, message, bot)
+        case "VENUE":
+            return 0
         case _:
             # not found
             pass
@@ -50,6 +53,15 @@ async def mediaGroupMessageController(data, message, bot):
                                 reply_markup=keyboard)
 
 
+async def videoNoteMessageController(data, message, bot):
+    keyboard = keyboardController(data['BUTTONS'])
+    await bot.send_video_note(chat_id=message.chat.id,
+                              video_note=InputFile.from_url(data['MESSAGE']['VIDEO_NOTE_URL'],
+                                                            data['MESSAGE']['VIDEO_NOTE_URL']))
+    return await message.answer(text=data['MESSAGE']['CAPTION'],
+                                reply_markup=keyboard)
+
+
 def mediaGroupController(media):
     mediaGroup = types.MediaGroup()
     for index, value in enumerate(media):
@@ -71,6 +83,3 @@ def keyboardController(buttons):
         )
     )
     return REPLY_KEYBOARD
-
-
-

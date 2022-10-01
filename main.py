@@ -1,7 +1,5 @@
 import logging
 import os
-import asyncio
-from code_tests_examples.tests import testAuth, testGetFrames
 from src.controller.controller import messageController, frameQualifier
 from src.frame.frame import Frame
 from src.db.database import Database
