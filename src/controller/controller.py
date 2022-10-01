@@ -50,7 +50,7 @@ def photoMessageController(data, message, bot):
 
 async def mediaGroupMessageController(data, message, bot):
     keyboard = keyboardController(data['BUTTONS'])
-    mediaGroup = mediaGroupController(data['MESSAGE']['MEDIA'])
+    mediaGroup = mediaGroupController(data['MESSAGE']['MEDIA_GROUP'])
     await bot.send_media_group(chat_id=message.chat.id,
                                media=mediaGroup)
     return await message.answer(text=data['MESSAGE']['MEDIA_CAPTION'],
