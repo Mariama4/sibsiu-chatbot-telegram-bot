@@ -1,4 +1,4 @@
-from aiogram.types import ReplyKeyboardMarkup, InputFile
+from aiogram.types import ReplyKeyboardMarkup, InputFile, ParseMode
 from aiogram import types
 
 
@@ -33,6 +33,7 @@ def messageController(database, data, message, state, bot):
 def textMessageController(data, message, bot):
     keyboard = keyboardController(data['BUTTONS'])
     return message.answer(text=data['MESSAGE']['TEXT'],
+                          parse_mode=ParseMode.HTML,
                           reply_markup=keyboard)
 
 
@@ -41,6 +42,7 @@ def photoMessageController(data, message, bot):
     return bot.send_photo(
         chat_id=message.chat.id,
         caption=data['MESSAGE']['PHOTO_CAPTION'],
+        parse_mode=ParseMode.HTML,
         photo=data['MESSAGE']['PHOTO_URL'],
         reply_markup=keyboard
     )
@@ -52,6 +54,7 @@ async def mediaGroupMessageController(data, message, bot):
     await bot.send_media_group(chat_id=message.chat.id,
                                media=mediaGroup)
     return await message.answer(text=data['MESSAGE']['MEDIA_CAPTION'],
+                                parse_mode=ParseMode.HTML,
                                 reply_markup=keyboard)
 
 
@@ -61,6 +64,7 @@ async def videoNoteMessageController(data, message, bot):
                               video_note=InputFile.from_url(data['MESSAGE']['VIDEO_NOTE_URL'],
                                                             data['MESSAGE']['VIDEO_NOTE_URL']))
     return await message.answer(text=data['MESSAGE']['VIDEO_NOTE_CAPTION'],
+                                parse_mode=ParseMode.HTML,
                                 reply_markup=keyboard)
 
 
@@ -76,6 +80,7 @@ async def venueMessageController(data, message, bot):
     )
     return await message.answer(
         text=data['MESSAGE']['VENUE_CAPTION'],
+        parse_mode=ParseMode.HTML,
         reply_markup=keyboard
     )
 
@@ -90,6 +95,7 @@ async def contactMessageController(data, message, bot):
     )
     return await message.answer(
         text=data['MESSAGE']['CONTACT_CAPTION'],
+        parse_mode=ParseMode.HTML,
         reply_markup=keyboard
     )
 

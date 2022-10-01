@@ -13,9 +13,6 @@ load_dotenv()
 
 
 def onStart():
-    # Configure logging
-    logging.basicConfig(level=logging.INFO)
-
     # INIT DB CLASS
     db = Database(
         url=os.getenv('API_URL'),
@@ -72,6 +69,19 @@ async def fgh(message: types.Message):
     await message.answer('oops!')
 
 
+async def onStartPolling(_):
+    # Configure logging
+    logging.basicConfig(
+        # filename="logs.log",
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+    )
+    # me = await bot.me
+    # logger.info(f'Бот запустился под ником {me.username}.')
+
+
 if __name__ == '__main__':
-    executor.start_polling(DISPATCHER, skip_updates=True)
+    executor.start_polling(DISPATCHER,
+                           skip_updates=True,
+                           on_startup=onStartPolling)
     onStop()
