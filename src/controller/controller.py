@@ -1,4 +1,4 @@
-from aiogram.types import ReplyKeyboardMarkup, InputFile, ParseMode
+from aiogram.types import ReplyKeyboardMarkup, InputFile, ParseMode, InputMedia
 from aiogram import types
 
 
@@ -10,47 +10,48 @@ async def frameQualifier(frame, message, state):
                 return value['REDIRECT_ON_ID_FRAME']
 
 
-def messageController(database, data, message, state, bot):
+def messageController(database, data, message, state, bot, configuration):
     # Определение типа сообщения
     match data['MESSAGE']['TYPE']:
         case "TEXT":
-            return textMessageController(data, message, bot)
+            return textMessageController(data, message, bot, configuration)
         case "PHOTO":
-            return photoMessageController(data, message, bot)
+            return photoMessageController(data, message, bot, configuration)
         case "MEDIA_GROUP":
-            return mediaGroupMessageController(data, message, bot)
+            return mediaGroupMessageController(data, message, bot, configuration)
         case "VIDEO_NOTE":
-            return videoNoteMessageController(data, message, bot)
+            return videoNoteMessageController(data, message, bot, configuration)
         case "VENUE":
-            return venueMessageController(data, message, bot)
+            return venueMessageController(data, message, bot, configuration)
         case "CONTACT":
-            return contactMessageController(data, message, bot)
+            return contactMessageController(data, message, bot, configuration)
         case _:
             # not found
             pass
 
 
-def textMessageController(data, message, bot):
+def textMessageController(data, message, bot, configuration):
     keyboard = keyboardController(data['BUTTONS'])
     return message.answer(text=data['MESSAGE']['TEXT'],
                           parse_mode=ParseMode.HTML,
                           reply_markup=keyboard)
 
 
-def photoMessageController(data, message, bot):
+def photoMessageController(data, message, bot, configuration):
     keyboard = keyboardController(data['BUTTONS'])
+    photo = configuration.getPublicUrl() + data['MESSAGE']['PHOTO']
     return bot.send_photo(
         chat_id=message.chat.id,
         caption=data['MESSAGE']['PHOTO_CAPTION'],
         parse_mode=ParseMode.HTML,
-        photo=data['MESSAGE']['PHOTO_URL'],
+        photo=photo,
         reply_markup=keyboard
     )
 
 
-async def mediaGroupMessageController(data, message, bot):
+async def mediaGroupMessageController(data, message, bot, configuration):
     keyboard = keyboardController(data['BUTTONS'])
-    mediaGroup = mediaGroupController(data['MESSAGE']['MEDIA_GROUP'])
+    mediaGroup = mediaGroupController(data['MESSAGE']['MEDIA_GROUP'], configuration)
     await bot.send_media_group(chat_id=message.chat.id,
                                media=mediaGroup)
     return await message.answer(text=data['MESSAGE']['MEDIA_CAPTION'],
@@ -58,17 +59,18 @@ async def mediaGroupMessageController(data, message, bot):
                                 reply_markup=keyboard)
 
 
-async def videoNoteMessageController(data, message, bot):
+async def videoNoteMessageController(data, message, bot, configuration):
     keyboard = keyboardController(data['BUTTONS'])
+    video_note = configuration.getPublicUrl() + data['MESSAGE']['VIDEO_NOTE']
     await bot.send_video_note(chat_id=message.chat.id,
-                              video_note=InputFile.from_url(data['MESSAGE']['VIDEO_NOTE_URL'],
-                                                            data['MESSAGE']['VIDEO_NOTE_URL']))
+                              video_note=InputFile.from_url(video_note,
+                                                            data['MESSAGE']['VIDEO_NOTE']))
     return await message.answer(text=data['MESSAGE']['VIDEO_NOTE_CAPTION'],
                                 parse_mode=ParseMode.HTML,
                                 reply_markup=keyboard)
 
 
-async def venueMessageController(data, message, bot):
+async def venueMessageController(data, message, bot, configuration):
     keyboard = keyboardController(data['BUTTONS'])
     await bot.send_venue(
         chat_id=message.chat.id,
@@ -85,7 +87,7 @@ async def venueMessageController(data, message, bot):
     )
 
 
-async def contactMessageController(data, message, bot):
+async def contactMessageController(data, message, bot, configuration):
     keyboard = keyboardController(data['BUTTONS'])
     await bot.send_contact(
         chat_id=message.chat.id,
@@ -100,10 +102,11 @@ async def contactMessageController(data, message, bot):
     )
 
 
-def mediaGroupController(media):
+def mediaGroupController(media, configuration):
     mediaGroup = types.MediaGroup()
+    publicUrl = configuration.getPublicUrl()
     for index, value in enumerate(media):
-        mediaGroup.attach_photo(value['URL'])
+        mediaGroup.attach_photo(publicUrl+value)
 
     return mediaGroup
 

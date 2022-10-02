@@ -20,7 +20,7 @@ def onStart():
         password=os.getenv('API_PASSWORD'))
     db.login(url=os.getenv('API_URL_LOGIN'))
     # GET CONFIG FROM API
-    configuration = Config(database=db, url=os.getenv('API_URL_CONFIGURATION'))
+    configuration = Config(database=db, url=os.getenv('API_URL_CONFIGURATION'), public=os.getenv('API_PUBLIC'))
     # GET TOKEN FOR CONNECT TO BOT
     API_TOKEN = configuration.getToken()
     # Initialize bot and dispatcher
@@ -52,7 +52,8 @@ async def start(message: types.Message):
     state = DISPATCHER.current_state(user=message.from_user.id)
     await state.set_state("start")
     data = FRAME.frames.get('start')
-    await messageController(database=DATABASE, data=data, message=message, state=state, bot=BOT)
+    await messageController(database=DATABASE, data=data, message=message, state=state, bot=BOT,
+                            configuration=CONFIGURATION)
 
 
 @DISPATCHER.message_handler(state=FRAMES_ID_FOR_STATES)
@@ -61,7 +62,8 @@ async def echo(message: types.Message):
     idFrame = await frameQualifier(frame=FRAME, message=message, state=state)
     await state.set_state(idFrame)
     data = FRAME.frames.get(idFrame)
-    await messageController(database=DATABASE, data=data, message=message, state=state, bot=BOT)
+    await messageController(database=DATABASE, data=data, message=message, state=state, bot=BOT,
+                            configuration=CONFIGURATION)
 
 
 @DISPATCHER.message_handler()
