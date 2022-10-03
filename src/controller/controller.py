@@ -1,5 +1,6 @@
-from aiogram.types import ReplyKeyboardMarkup, InputFile, ParseMode, InputMedia
+from aiogram.types import ReplyKeyboardMarkup, InputFile, ParseMode, InlineKeyboardButton
 from aiogram import types
+from aiogram.types.web_app_info import WebAppInfo
 
 
 async def frameQualifier(frame, message, state):
@@ -25,6 +26,8 @@ def messageController(database, data, message, state, bot, configuration):
             return venueMessageController(data, message, bot, configuration)
         case "CONTACT":
             return contactMessageController(data, message, bot, configuration)
+        case "WEB_APP":
+            return webAppController(data, message, bot, configuration)
         case _:
             # not found
             pass
@@ -102,6 +105,23 @@ async def contactMessageController(data, message, bot, configuration):
     )
 
 
+def webAppController(data, message, bot, configuration):
+    keyboard = keyboardController(data['BUTTONS'])
+    keyboard.add(
+        InlineKeyboardButton(
+            text=data['MESSAGE']['WEB_APP_CAPTION'],
+            web_app=WebAppInfo(
+                url=data['MESSAGE']['WEB_APP']
+            )
+        )
+    )
+    return message.answer(
+        text=data['MESSAGE']['WEB_APP_TEXT'],
+        parse_mode=ParseMode.HTML,
+        reply_markup=keyboard
+    )
+
+
 def mediaGroupController(media, configuration):
     mediaGroup = types.MediaGroup()
     publicUrl = configuration.getPublicUrl()
@@ -121,7 +141,9 @@ def keyboardController(buttons):
     list(
         map(
             lambda x:
-            REPLY_KEYBOARD.add(x['TEXT']),
+            REPLY_KEYBOARD.add(
+                InlineKeyboardButton(text=x['TEXT'])
+            ),
             buttons
         )
     )
