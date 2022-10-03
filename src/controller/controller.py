@@ -39,7 +39,7 @@ def textMessageController(data, message, bot, configuration):
 
 def photoMessageController(data, message, bot, configuration):
     keyboard = keyboardController(data['BUTTONS'])
-    photo = configuration.getPublicUrl() + data['MESSAGE']['PHOTO']
+    photo = InputFile.from_url(configuration.getPublicUrl() + data['MESSAGE']['PHOTO'])
     return bot.send_photo(
         chat_id=message.chat.id,
         caption=data['MESSAGE']['PHOTO_CAPTION'],
@@ -106,7 +106,9 @@ def mediaGroupController(media, configuration):
     mediaGroup = types.MediaGroup()
     publicUrl = configuration.getPublicUrl()
     for index, value in enumerate(media):
-        mediaGroup.attach_photo(publicUrl+value)
+        mediaGroup.attach_photo(
+            InputFile.from_url(publicUrl+value)
+        )
 
     return mediaGroup
 
