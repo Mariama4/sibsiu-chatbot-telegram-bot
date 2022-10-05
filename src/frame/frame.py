@@ -1,26 +1,18 @@
-from dotenv import load_dotenv
-import os
-load_dotenv()
-
-
 class Frame:
 
     frames = {}
 
-    def __init__(self, database):
-        self._database = database
+    def __init__(self, frame):
+        self._frame = frame
+        self.__parseFrames__(frame)
 
     def __parseFrames__(self, data):
         frames = data['frames']
+        # NEW
+        # frames = data['data']
         for index, value in enumerate(frames):
             frame = value['data']
             self.frames[frame['ID']] = frame['DATA']
 
-    def getFrames(self):
-        response = self._database.get(
-            url=os.getenv('API_URL_FRAME')
-        )
-        self.__parseFrames__(response)
-
     def getIdOfFrames(self):
-        return self.frames.keys()
+        return list(self.frames.keys())
