@@ -12,27 +12,27 @@ API_PUBLIC = os.getenv('API_PUBLIC')
 async def frameQualifier(frame, message, state):
     async with state.proxy() as data:
         previousFrame = frame.frames.get(data.state)
-        for index, value in enumerate(previousFrame['BUTTONS']):
-            if value['TEXT'] == message.text:
-                return value['REDIRECT_ON_ID_FRAME']
+        for index, value in enumerate(previousFrame['markup']):
+            if value['text'] == message.text:
+                return value['callback']
 
 
 def messageController(data, message, bot):
     # Определение типа сообщения
-    match data['MESSAGE']['TYPE']:
-        case "TEXT":
+    match data['type']:
+        case "text":
             return textMessageController(data, message)
-        case "PHOTO":
+        case "photo":
             return photoMessageController(data, message, bot)
-        case "MEDIA_GROUP":
+        case "media_group":
             return mediaGroupMessageController(data, message, bot)
-        case "VIDEO_NOTE":
+        case "video_note":
             return videoNoteMessageController(data, message, bot)
-        case "VENUE":
+        case "venue":
             return venueMessageController(data, message, bot)
-        case "CONTACT":
+        case "contact":
             return contactMessageController(data, message, bot)
-        case "WEB_APP":
+        case "web_app":
             return webAppController(data, message)
         case _:
             # not found
@@ -40,18 +40,18 @@ def messageController(data, message, bot):
 
 
 def textMessageController(data, message):
-    keyboard = keyboardController(data['BUTTONS'])
-    return message.answer(text=data['MESSAGE']['TEXT'],
+    keyboard = keyboardController(data['markup'])
+    return message.answer(text=data['text'],
                           parse_mode=ParseMode.HTML,
                           reply_markup=keyboard)
 
 
 def photoMessageController(data, message, bot):
-    keyboard = keyboardController(data['BUTTONS'])
-    photo = InputFile.from_url(API_PUBLIC + data['MESSAGE']['PHOTO'])
+    keyboard = keyboardController(data['markup'])
+    photo = InputFile.from_url(API_PUBLIC + data['photo'])
     return bot.send_photo(
         chat_id=message.chat.id,
-        caption=data['MESSAGE']['PHOTO_CAPTION'],
+        caption=data['photo_caption'],
         parse_mode=ParseMode.HTML,
         photo=photo,
         reply_markup=keyboard
@@ -59,69 +59,69 @@ def photoMessageController(data, message, bot):
 
 
 async def mediaGroupMessageController(data, message, bot):
-    keyboard = keyboardController(data['BUTTONS'])
-    mediaGroup = mediaGroupController(data['MESSAGE']['MEDIA_GROUP'])
+    keyboard = keyboardController(data['markup'])
+    mediaGroup = mediaGroupController(data['media_group'])
     await bot.send_media_group(chat_id=message.chat.id,
                                media=mediaGroup)
-    return await message.answer(text=data['MESSAGE']['MEDIA_CAPTION'],
+    return await message.answer(text=data['media_group_caption'],
                                 parse_mode=ParseMode.HTML,
                                 reply_markup=keyboard)
 
 
 async def videoNoteMessageController(data, message, bot):
-    keyboard = keyboardController(data['BUTTONS'])
-    video_note = API_PUBLIC + data['MESSAGE']['VIDEO_NOTE']
+    keyboard = keyboardController(data['markup'])
+    video_note = API_PUBLIC + data['video_note']
     await bot.send_video_note(chat_id=message.chat.id,
                               video_note=InputFile.from_url(video_note,
-                                                            data['MESSAGE']['VIDEO_NOTE']))
-    return await message.answer(text=data['MESSAGE']['VIDEO_NOTE_CAPTION'],
+                                                            data['video_note']))
+    return await message.answer(text=data['video_note_caption'],
                                 parse_mode=ParseMode.HTML,
                                 reply_markup=keyboard)
 
 
 async def venueMessageController(data, message, bot):
-    keyboard = keyboardController(data['BUTTONS'])
+    keyboard = keyboardController(data['markup'])
     await bot.send_venue(
         chat_id=message.chat.id,
-        latitude=data['MESSAGE']['VENUE_LATITUDE'],
-        longitude=data['MESSAGE']['VENUE_LONGITUDE'],
-        title=data['MESSAGE']['VENUE_TITLE'],
-        address=data['MESSAGE']['VENUE_ADDRESS'],
+        latitude=data['venue_latitude'],
+        longitude=data['venue_longitude'],
+        title=data['venue_title'],
+        address=data['venue_address'],
     )
     return await message.answer(
-        text=data['MESSAGE']['VENUE_CAPTION'],
+        text=data['venue_caption'],
         parse_mode=ParseMode.HTML,
         reply_markup=keyboard
     )
 
 
 async def contactMessageController(data, message, bot):
-    keyboard = keyboardController(data['BUTTONS'])
+    keyboard = keyboardController(data['markup'])
     await bot.send_contact(
         chat_id=message.chat.id,
-        phone_number=data['MESSAGE']['CONTACT_PHONE_NUMBER'],
-        first_name=data['MESSAGE']['CONTACT_FIRST_NAME'],
-        last_name=data['MESSAGE']['CONTACT_LAST_NAME']
+        phone_number=data['contact_phone_number'],
+        first_name=data['contact_first_name'],
+        last_name=data['contact_last_name']
     )
     return await message.answer(
-        text=data['MESSAGE']['CONTACT_CAPTION'],
+        text=data['contact_caption'],
         parse_mode=ParseMode.HTML,
         reply_markup=keyboard
     )
 
 
 def webAppController(data, message):
-    keyboard = keyboardController(data['BUTTONS'])
+    keyboard = keyboardController(data['markup'])
     keyboard.add(
         InlineKeyboardButton(
-            text=data['MESSAGE']['WEB_APP_CAPTION'],
+            text=data['web_app_button_text'],
             web_app=WebAppInfo(
-                url=data['MESSAGE']['WEB_APP']
+                url=data['web_app']
             )
         )
     )
     return message.answer(
-        text=data['MESSAGE']['WEB_APP_TEXT'],
+        text=data['web_app_caption'],
         parse_mode=ParseMode.HTML,
         reply_markup=keyboard
     )
@@ -146,7 +146,7 @@ def keyboardController(buttons):
         map(
             lambda x:
             REPLY_KEYBOARD.add(
-                InlineKeyboardButton(text=x['TEXT'])
+                InlineKeyboardButton(text=x['text'])
             ),
             buttons
         )

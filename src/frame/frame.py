@@ -7,12 +7,11 @@ class Frame:
         self.__parseFrames__(frame)
 
     def __parseFrames__(self, data):
-        frames = data['frames']
-        # NEW
-        # frames = data['data']
+        frames = data['result']
+
         for index, value in enumerate(frames):
             frame = value['data']
-            self.frames[frame['ID']] = frame['DATA']
+            self.frames[frame['frame_id']] = frame['frame']
 
     def getIdOfFrames(self):
         return list(self.frames.keys())
