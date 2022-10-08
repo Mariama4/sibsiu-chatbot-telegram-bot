@@ -1,0 +1,11 @@
+from photoHandler import photoMessageHandler
+from textHandler import textMessageHandler
+from mediaGroupHandler import mediaGroupMessageHandler
+from videoNoteHandler import videoNoteMessageHandler
+from venueHandler import venueMessageHandler
+from contactHandler import contactMessageHandler
+from webAppHandler import webAppHandler
+from documentHandler import documentMessageHandler
+from locationHandler import locationMessageHandler
+
+

@@ -1,12 +1,12 @@
 from config import *
 
 
-@dp.message_handler(commands=['start'])
-async def start(message: types.Message):
-    state = dp.current_state(user=message.from_user.id)
-    await state.set_state("start")
-    data = frame.frames.get('start')
-    await messageController(data=data, message=message, bot=bot)
+# @dp.message_handler(commands=['start'])
+# async def start(message: types.Message):
+#     state = dp.current_state(user=message.from_user.id)
+#     await state.set_state("start")
+#     data = frame.frames.get('start')
+#     await messageController(data=data, message=message, bot=bot)
 
 
 @dp.message_handler(state=FRAMES_ID)
