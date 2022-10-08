@@ -1,11 +1,15 @@
-from photoHandler import photoMessageHandler
-from textHandler import textMessageHandler
-from mediaGroupHandler import mediaGroupMessageHandler
-from videoNoteHandler import videoNoteMessageHandler
-from venueHandler import venueMessageHandler
-from contactHandler import contactMessageHandler
-from webAppHandler import webAppHandler
-from documentHandler import documentMessageHandler
-from locationHandler import locationMessageHandler
+from src.controller.handlers.photoHandler import photoMessageHandler
+from src.controller.handlers.textHandler import textMessageHandler
+from src.controller.handlers.mediaGroupHandler import mediaGroupMessageHandler
+from src.controller.handlers.videoNoteHandler import videoNoteMessageHandler
+from src.controller.handlers.venueHandler import venueMessageHandler
+from src.controller.handlers.contactHandler import contactMessageHandler
+from src.controller.handlers.webAppHandler import webAppHandler
+from src.controller.handlers.documentHandler import documentMessageHandler
+from src.controller.handlers.locationHandler import locationMessageHandler
+from src.controller.handlers.videoHandler import videoMessageHandler
+from src.controller.handlers.animationHandler import animationMessageHandler
+from src.controller.handlers.audioHandler import audioMessageHandler
+from src.controller.handlers.voiceHandler import voiceMessageHandler
 
 

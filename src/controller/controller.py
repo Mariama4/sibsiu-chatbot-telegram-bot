@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from handlers import *
+from src.controller.handlers import *
 
 load_dotenv()
 
@@ -37,6 +37,14 @@ def messageController(data, message, bot):
             return documentMessageHandler(data, message, bot, API_PUBLIC)
         case "location":
             return locationMessageHandler(data, message, bot)
+        case "video":
+            return videoMessageHandler(data, message, bot, API_PUBLIC)
+        case "animation":
+            return animationMessageHandler(data, message, bot, API_PUBLIC)
+        case "audio":
+            return audioMessageHandler(data, message, bot, API_PUBLIC)
+        case "voice":
+            return voiceMessageHandler(data, message, bot, API_PUBLIC)
         case _:
             # not found
             pass

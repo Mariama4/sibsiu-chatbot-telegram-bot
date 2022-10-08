@@ -1,6 +1,6 @@
 from aiogram.types import ParseMode, InlineKeyboardButton
 from aiogram.types.web_app_info import WebAppInfo
-from utils import keyboardBuilder
+from src.controller.handlers.utils import keyboardBuilder
 
 
 def webAppHandler(data, message):

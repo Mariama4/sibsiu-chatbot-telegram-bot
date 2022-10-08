@@ -2,13 +2,13 @@ from src.controller.handlers.utils import keyboardBuilder
 from aiogram.types import ParseMode
 
 
-def documentMessageHandler(data, message, bot, api_public):
+async def audioMessageHandler(data, message, bot, api_public):
     keyboard = keyboardBuilder(data['markup'])
-    document = api_public + data['document']
-    return bot.send_document(
+    audio = api_public + data['audio']
+    return bot.send_audio(
         chat_id=message.chat.id,
-        document=document,
-        caption=data['document_caption'],
+        audio=audio,
+        caption=data['audio_caption'],
         reply_markup=keyboard,
         parse_mode=ParseMode.HTML
     )

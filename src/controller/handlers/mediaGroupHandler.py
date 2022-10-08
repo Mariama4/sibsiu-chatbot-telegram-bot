@@ -1,4 +1,4 @@
-from utils import keyboardBuilder, mediaGroupBuilder
+from src.controller.handlers.utils import keyboardBuilder, mediaGroupBuilder
 from aiogram.types import ParseMode
 
 

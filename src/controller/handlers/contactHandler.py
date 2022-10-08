@@ -1,4 +1,4 @@
-from utils import keyboardBuilder
+from src.controller.handlers.utils import keyboardBuilder
 from aiogram.types import ParseMode
 
 

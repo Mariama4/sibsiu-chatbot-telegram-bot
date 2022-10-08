@@ -1,5 +1,5 @@
 from aiogram.types import ParseMode, InputFile
-from utils import keyboardBuilder
+from src.controller.handlers.utils import keyboardBuilder
 
 
 def photoMessageHandler(data, message, bot, api_public):

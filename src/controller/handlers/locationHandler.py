@@ -1,5 +1,5 @@
 from aiogram.types import ParseMode
-from utils import keyboardBuilder
+from src.controller.handlers.utils import keyboardBuilder
 
 
 async def locationMessageHandler(data, message, bot):
