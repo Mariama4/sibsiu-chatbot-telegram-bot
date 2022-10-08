@@ -5,7 +5,7 @@ from config import *
 async def start(message: types.Message):
     state = dp.current_state(user=message.from_user.id)
     await state.set_state("start")
-    data = frame.frames.get('start')
+    data = frame.frames.get("start")
     await messageController(data=data, message=message, bot=bot)
 
 
@@ -20,7 +20,10 @@ async def echo(message: types.Message):
 
 @dp.message_handler()
 async def clientMissMatch(message: types.Message):
-    await message.answer('oops!')
+    state = dp.current_state(user=message.from_user.id)
+    await state.set_state("*")
+    data = frame.frames.get("*")
+    await messageController(data=data, message=message, bot=bot)
 
 
 
