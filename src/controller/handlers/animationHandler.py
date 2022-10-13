@@ -5,7 +5,7 @@ from src.controller.handlers.utils import keyboardBuilder
 async def animationMessageHandler(data, message, bot, api_public):
     keyboard = keyboardBuilder(data['markup'])
     animation = api_public + data['animation']
-    return bot.send_animation(
+    return await bot.send_animation(
         chat_id=message.chat.id,
         animation=animation,
         caption=data['animation_caption'],

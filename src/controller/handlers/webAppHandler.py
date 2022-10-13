@@ -3,7 +3,7 @@ from aiogram.types.web_app_info import WebAppInfo
 from src.controller.handlers.utils import keyboardBuilder
 
 
-def webAppHandler(data, message):
+async def webAppHandler(data, message):
     keyboard = keyboardBuilder(data['markup'])
     keyboard.add(
         InlineKeyboardButton(
@@ -13,7 +13,7 @@ def webAppHandler(data, message):
             )
         )
     )
-    return message.answer(
+    return await message.answer(
         text=data['web_app_caption'],
         parse_mode=ParseMode.HTML,
         reply_markup=keyboard

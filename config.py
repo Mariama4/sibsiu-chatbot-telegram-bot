@@ -11,10 +11,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 logging.basicConfig(
-        # filename="logs.log",
-        level=logging.NOTSET,
-        format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
-    )
+    filename="logs.log",
+    level=logging.NOTSET,
+    format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+)
 
 
 api = Http()

@@ -26,4 +26,5 @@ async def clientMissMatch(message: types.Message):
     await messageController(data=data, message=message, bot=bot)
 
 
-
+if __name__ == '__main__':
+    executor.start_polling(dp, skip_updates=True)
