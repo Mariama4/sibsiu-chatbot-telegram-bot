@@ -10,6 +10,6 @@ async def locationMessageHandler(data, message, bot):
         longitude=data['location_longitude'],
         horizontal_accuracy=data['location_horizontal_accuracy']
     )
-    return await message.answer(text=data['media_group_caption'],
+    return await message.answer(text=data['location_caption'],
                                 parse_mode=ParseMode.HTML,
                                 reply_markup=keyboard)
