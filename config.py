@@ -19,10 +19,10 @@ logging.basicConfig(
 
 api = Http()
 
-# API_TOKEN = api.get(
-#     path=os.getenv('API_URL_CONFIGURATION')
-# )['result'][0]['token']
-API_TOKEN = os.getenv('TOKEN')
+API_TOKEN = api.get(
+    path=os.getenv('API_URL_CONFIGURATION')
+)['result'][0]['token']
+# API_TOKEN = os.getenv('TOKEN')
 
 frame = Frame(
     api.get(
