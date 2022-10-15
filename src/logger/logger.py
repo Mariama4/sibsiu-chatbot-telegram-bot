@@ -8,6 +8,8 @@ HANDLED_STR = ['Unhandled', 'Handled']
 
 # логгер из aiogram
 #  https://github.com/aiogram/aiogram/tree/master
+
+
 class LoggingMiddleware(BaseMiddleware):
     def __init__(self, logger=__name__):
         if not isinstance(logger, logging.Logger):
@@ -31,10 +33,12 @@ class LoggingMiddleware(BaseMiddleware):
     async def on_post_process_update(self, update: types.Update, result, data: dict):
         timeout = self.check_timeout(update)
         if timeout > 0:
-            self.logger.info(f"Process update [ID:{update.update_id}]: [success] (in {timeout} ms)")
+            self.logger.info(
+                f"Process update [ID:{update.update_id}]: [success] (in {timeout} ms)")
 
     async def on_pre_process_message(self, message: types.Message, data: dict):
-        self.logger.info(f"Received message [ID:{message.message_id}] in chat [{message.chat.type}:{message.chat.id}]")
+        self.logger.info(
+            f"Received message [ID:{message.message_id}] in chat [{message.chat.type}:{message.chat.id}]")
 
     async def on_post_process_message(self, message: types.Message, results, data: dict):
         self.logger.debug(f"{HANDLED_STR[bool(len(results))]} "
@@ -148,13 +152,15 @@ class LoggingMiddleware(BaseMiddleware):
     async def on_pre_process_error(self, update, error, data: dict):
         timeout = self.check_timeout(update)
         if timeout > 0:
-            self.logger.info(f"Process update [ID:{update.update_id}]: [failed] (in {timeout} ms)")
+            self.logger.info(
+                f"Process update [ID:{update.update_id}]: [failed] (in {timeout} ms)")
 
     async def on_pre_process_poll(self, poll, data):
         self.logger.info(f"Received poll [ID:{poll.id}]")
 
     async def on_post_process_poll(self, poll, results, data):
-        self.logger.debug(f"{HANDLED_STR[bool(len(results))]} poll [ID:{poll.id}]")
+        self.logger.debug(
+            f"{HANDLED_STR[bool(len(results))]} poll [ID:{poll.id}]")
 
     async def on_pre_process_poll_answer(self, poll_answer, data):
         self.logger.info(f"Received poll answer [ID:{poll_answer.poll_id}] "

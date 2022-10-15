@@ -37,3 +37,27 @@ class Http:
             json=json
         )
         return response.json()
+
+    async def asyncGet(self, path, json=None):
+        response = requests.get(
+            url=self._api_url + path,
+            headers=self._headers,
+            json=json
+        )
+        return response.json()
+
+    async def asyncPost(self, path, json=None):
+        response = requests.post(
+            url=self._api_url + path,
+            headers=self._headers,
+            json=json
+        )
+        return response.json()
+
+    async def asyncPatch(self, path, json=None):
+        response = requests.patch(
+            url=self._api_url + path,
+            headers=self._headers,
+            json=json
+        )
+        return response.json()
