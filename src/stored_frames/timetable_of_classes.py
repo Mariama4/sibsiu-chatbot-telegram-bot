@@ -22,6 +22,8 @@ def getSchedule():
     instituteDivs = responseHTML.select('.institut_div')
     resultStructure = []
     listOfInstituteNames = []
+    # расписание для лиц с ОВЗ пустое как я понимаю...
+    instituteDivs.pop()
 
     for institute in instituteDivs:
         instituteTitle = institute.select('p.p_title > strong')
