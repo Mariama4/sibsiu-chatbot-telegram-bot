@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from src.controller.handlers import *
+from src.stored_frames.controller import storedFramesController
 
 load_dotenv()
 
@@ -16,7 +17,7 @@ async def frameQualifier(frame, message, state):
         return 'start'
 
 
-def messageController(data, message, bot):
+def messageController(data, message, bot, dp):
     # Определение типа сообщения
     match data['type']:
         case "text":
@@ -45,6 +46,8 @@ def messageController(data, message, bot):
             return audioMessageHandler(data, message, bot, API_PUBLIC)
         case "voice":
             return voiceMessageHandler(data, message, bot, API_PUBLIC)
+        case "stored_frame_id":
+            return storedFramesController(data, message, bot, dp)
         case _:
             # not found
             pass

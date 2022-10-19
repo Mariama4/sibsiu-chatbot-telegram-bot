@@ -7,11 +7,16 @@ async def start(message: types.Message):
     frameId = 'start'
     await state.set_state(frameId)
     data = frame.frames.get(frameId)
-    await messageController(data=data, message=message, bot=bot)
+    await messageController(data=data, message=message, bot=bot, dp=dp)
     # logging
     await httpLogger.checkUser(message)
     await httpLogger.sendAction(message)
     await httpLogger.sendFrameAction(message, frameId)
+
+
+@dp.message_handler(state=STORED_FRAMES_IDS)
+async def stored_frames_echo(message: types.Message):
+    await storedStatesController(message=message, bot=bot, dp=dp)
 
 
 @dp.message_handler(state=FRAMES_ID)
@@ -20,7 +25,7 @@ async def echo(message: types.Message):
     frameId = await frameQualifier(frame=frame, message=message, state=state)
     await state.set_state(frameId)
     data = frame.frames.get(frameId)
-    await messageController(data=data, message=message, bot=bot)
+    await messageController(data=data, message=message, bot=bot, dp=dp)
     # logging
     await httpLogger.sendAction(message)
     await httpLogger.sendFrameAction(message, frameId)
@@ -32,7 +37,7 @@ async def clientMissMatch(message: types.Message):
     frameId = '*'
     await state.set_state(frameId)
     data = frame.frames.get(frameId)
-    await messageController(data=data, message=message, bot=bot)
+    await messageController(data=data, message=message, bot=bot, dp=dp)
     # logging
     await httpLogger.sendAction(message)
     await httpLogger.sendFrameAction(message, frameId)

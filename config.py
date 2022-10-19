@@ -8,6 +8,7 @@ from src.logger.logger import LoggingMiddleware
 from src.logger.httpLogger import HttpLogger
 from src.requests.http import Http
 from dotenv import load_dotenv
+from src.stored_frames.controller import *
 
 load_dotenv()
 

@@ -52,6 +52,7 @@ async def status(req):
     return web.Response(text=status)
 
 if __name__ == "__main__":
+    # install mypy для типизации
     bot = Bot()
     app.add_routes(routes)
     web.run_app(app)
