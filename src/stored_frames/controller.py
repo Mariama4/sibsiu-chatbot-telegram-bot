@@ -12,10 +12,10 @@ async def getState(dp, message):
         return data.state
 
 
-def storedFramesController(data, message, bot, dp):
+async def storedFramesController(data, message, bot, dp):
     match data['stored_frame_id']:
         case 'timetable_of_classes':
-            return timetable_of_classes(data, message, bot, dp)
+            return await timetable_of_classes(data, message, bot, dp)
         case 'current_week':
             pass
         case 'consultation_schedule':

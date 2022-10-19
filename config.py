@@ -12,11 +12,11 @@ from src.stored_frames.controller import *
 
 load_dotenv()
 
-# logging.basicConfig(
-#     # filename="logs.log",
-#     level=logging.NOTSET,
-#     format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
-# )
+logging.basicConfig(
+    # filename="logs.log",
+    level=logging.NOTSET,
+    format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+)
 
 api = Http()
 httpLogger = HttpLogger(api, os.getenv('API_URL_LOG'),
@@ -39,4 +39,4 @@ FRAMES_ID = frame.getIdOfFrames()
 bot = Bot(token=API_TOKEN)
 
 dp = Dispatcher(bot, storage=MemoryStorage())
-# dp.middleware.setup(LoggingMiddleware())
+dp.middleware.setup(LoggingMiddleware())

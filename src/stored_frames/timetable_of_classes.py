@@ -87,7 +87,7 @@ async def timetable_of_classes(data, message, bot, dp):
 
         return await message.answer(
             parse_mode=ParseMode.HTML,
-            text="институты",
+            text="Выберите институт",
             reply_markup=KEYBOARD
         )
     except Exception as error:
@@ -114,7 +114,7 @@ async def timetable_of_classes_stage_1(message, bot, dp):
 
     await message.answer(
         parse_mode=ParseMode.HTML,
-        text="группа",
+        text="Выберите файл",
         reply_markup=KEYBOARD
     )
     async with state.proxy() as data:
