@@ -1,5 +1,6 @@
 from src.stored_frames.timetable_of_classes import *
 from src.stored_frames.consultation_schedule import *
+from src.stored_frames.current_week import *
 
 STORED_FRAMES_IDS = [
     'stored_frame_id_timetable_of_classes_stage_1_523442133421',
@@ -21,7 +22,7 @@ async def storedFramesController(data, message, bot, dp):
         case 'timetable_of_classes':
             return await timetable_of_classes(data, message, bot, dp)
         case 'current_week':
-            pass
+            return await current_week(data, message, bot, dp)
         case 'consultation_schedule':
             return await consultation_schedule(data, message, bot, dp)
         case _:
