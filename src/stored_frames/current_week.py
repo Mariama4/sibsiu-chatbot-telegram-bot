@@ -6,7 +6,6 @@ from aiogram.types import ReplyKeyboardMarkup
 def getWeek():
     nums = int(datetime.datetime.utcnow().isocalendar()[1])
     x = datetime.datetime.today()
-    print(x.weekday())
     # четная
     if (nums % 2) == 0:
         if x.weekday() == 6:
