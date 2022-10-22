@@ -83,7 +83,7 @@ async def timetable_of_classes(data, message, bot, dp):
     try:
         updateData()
         KEYBOARD = ReplyKeyboardMarkup(resize_keyboard=True,
-                                       one_time_keyboard=True)
+                                       one_time_keyboard=False)
         for value in CurrentData.InstituteNames:
             KEYBOARD.add(value)
 
@@ -101,7 +101,7 @@ async def timetable_of_classes_stage_1(message, bot, dp):
     await state.set_state("stored_frame_id_timetable_of_classes_stage_2_616470294411")
 
     KEYBOARD = ReplyKeyboardMarkup(resize_keyboard=True,
-                                   one_time_keyboard=True)
+                                   one_time_keyboard=False)
 
     selectedInstitudeFiles = []
     for value in CurrentData.Schedule:
@@ -131,7 +131,7 @@ async def timetable_of_classes_stage_2(message, bot, dp):
     date = None
     MEDIA = types.MediaGroup()
     KEYBOARD = ReplyKeyboardMarkup(resize_keyboard=True,
-                                   one_time_keyboard=True)
+                                   one_time_keyboard=False)
     async with state.proxy() as data:
         selectedInstitudeFiles = data['selectedInstitudeFiles']
     for value in selectedInstitudeFiles:

@@ -100,7 +100,7 @@ async def consultation_schedule(data, message, bot, dp):
     try:
         updateData()
         KEYBOARD = ReplyKeyboardMarkup(resize_keyboard=True,
-                                       one_time_keyboard=True)
+                                       one_time_keyboard=False)
         pandasExcelFileColumns = ConsultationSchedule.schedule.columns
         uniqueInstitutes = ConsultationSchedule.schedule[pandasExcelFileColumns[0]].unique()
         for value in uniqueInstitutes:
@@ -120,7 +120,7 @@ async def consultation_schedule_stage_1(message, bot, dp):
     await state.set_state('stored_frame_id_consultation_schedule_stage_2_322282694270')
 
     KEYBOARD = ReplyKeyboardMarkup(resize_keyboard=True,
-                                   one_time_keyboard=True)
+                                   one_time_keyboard=False)
 
     pandasExcelFileColumns = ConsultationSchedule.schedule.columns
     dataframe = ConsultationSchedule.schedule.loc[
@@ -143,7 +143,7 @@ async def consultation_schedule_stage_2(message, bot, dp):
     state = dp.current_state(user=message.from_user.id)
     await state.set_state('stored_frame_id_consultation_schedule_stage_3_042298741485')
     KEYBOARD = ReplyKeyboardMarkup(resize_keyboard=True,
-                                   one_time_keyboard=True)
+                                   one_time_keyboard=False)
 
     pandasExcelFileColumns = ConsultationSchedule.schedule.columns
     dataframe = ConsultationSchedule.schedule.loc[
@@ -176,7 +176,7 @@ async def consultation_schedule_stage_3(message, bot, dp):
     for i, row in dataframe.iterrows():
         text += f'\n- День недели: {row[3]}, \n  Неделя: {row[4]}, \n  Время: {row[5]}, \n  Аудитория: {row[6]}'
     KEYBOARD = ReplyKeyboardMarkup(resize_keyboard=True,
-                                   one_time_keyboard=True)
+                                   one_time_keyboard=False)
     KEYBOARD.add('Назад')
 
     return await message.answer(

@@ -26,7 +26,7 @@ async def current_week(data, message, bot, dp):
     await state.set_state("start")
     text = getWeek()
     KEYBOARD = ReplyKeyboardMarkup(resize_keyboard=True,
-                                   one_time_keyboard=True)
+                                   one_time_keyboard=False)
     KEYBOARD.add('Назад')
     await bot.send_message(CHAT_ID,
                            text=text,
