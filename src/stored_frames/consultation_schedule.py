@@ -78,7 +78,7 @@ def downloadFileFromDisk():
 
     response = requests.get('https://cloud-api.yandex.net/v1/disk/resources/download', params=params, headers=headers)
 
-    if response.status_code == 200:
+    if response.status_code in [200]:
         return response.json()['href']
     else:
         # обработать
