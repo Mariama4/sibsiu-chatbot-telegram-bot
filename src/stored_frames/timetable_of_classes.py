@@ -9,8 +9,21 @@ from datetime import datetime
 
 
 class CurrentData(object):
+    dateUpdate = None
     InstituteNames = None
     Schedule = None
+
+
+def isTimeExpired():
+    now = datetime.now()
+    if CurrentData.dateUpdate is None:
+        CurrentData.dateUpdate = now
+        return True
+    period = now - CurrentData.dateUpdate
+    if period.days > 0:
+        CurrentData.dateUpdate = now
+        return True
+    return False
 
 
 def getSchedule():
@@ -54,17 +67,20 @@ def getFileAndLastModifiedDate(link):
 
 
 def ConvertPDFtoPNG(res):
-    images = convert_from_bytes(res.content, dpi=300)
-    countOfPics = len(images)
-    listOfBytesImages = []
+    try:
+        images = convert_from_bytes(res.content, dpi=300)
+        countOfPics = len(images)
+        listOfBytesImages = []
 
-    for i, v in enumerate(images):
-        buf = BytesIO()
-        v.save(buf, format('PNG'))
-        buf.seek(0)
-        listOfBytesImages.append(buf)
+        for i, v in enumerate(images):
+            buf = BytesIO()
+            v.save(buf, format('PNG'))
+            buf.seek(0)
+            listOfBytesImages.append(buf)
 
-    return listOfBytesImages, countOfPics
+        return listOfBytesImages, countOfPics
+    except Exception as error:
+        print(error)
 
 
 def correctDate(date):
@@ -73,8 +89,9 @@ def correctDate(date):
 
 
 def updateData():
-    CurrentData.Schedule, \
-    CurrentData.InstituteNames = getSchedule()
+    if isTimeExpired():
+        CurrentData.Schedule, \
+        CurrentData.InstituteNames = getSchedule()
 
 
 async def timetable_of_classes(data, message, bot, dp):
@@ -125,46 +142,50 @@ async def timetable_of_classes_stage_1(message, bot, dp):
 
 
 async def timetable_of_classes_stage_2(message, bot, dp):
-    state = dp.current_state(user=message.from_user.id)
-    await state.set_state("start")
-    CHAT_ID = message.chat.id
-    date = None
-    MEDIA = types.MediaGroup()
-    KEYBOARD = ReplyKeyboardMarkup(resize_keyboard=True,
-                                   one_time_keyboard=False)
-    async with state.proxy() as data:
-        selectedInstitudeFiles = data['selectedInstitudeFiles']
-    for value in selectedInstitudeFiles:
-        if value['file_name'] == message.text:
-            await bot.send_message(CHAT_ID, text="Идет загрузка, пожалуйста подождите...")
-            file, date = getFileAndLastModifiedDate(value['file_link'])
-            listOfBytesImages, countOfImages = ConvertPDFtoPNG(file)
-            if countOfImages > 10:
-                await bot.send_message(message.chat.id,
-                                       text=(f'В файле {countOfImages} изображений, расписание будет'
-                                             + f' отправлено порционно.'))
-                countTensFiles = countOfImages // 10
-                residueCountTensFiles = countOfImages % 10
-                currentNumberOfTensFiles = 0
-                for cTF in range(countTensFiles):
-                    MEDIACTF = types.MediaGroup()
-                    for cTFP in range(10):
-                        bPhoto = listOfBytesImages[currentNumberOfTensFiles]
-                        MEDIACTF.attach_photo(bPhoto, f'Страница документа: {currentNumberOfTensFiles + 1}')
-                        currentNumberOfTensFiles += 1
-                    await bot.send_media_group(message.from_user.id, MEDIACTF)
-                if residueCountTensFiles:
-                    MEDIACTFR = types.MediaGroup()
-                    for cTFR in range(countOfImages)[-residueCountTensFiles:]:
-                        bPhoto = listOfBytesImages[cTFR]
-                        MEDIACTFR.attach_photo(bPhoto, f'Страница документа: {cTFR + 1}')
-                    await bot.send_media_group(message.from_user.id, MEDIACTFR)
-            else:
-                for index, image in enumerate(listOfBytesImages):
-                    MEDIA.attach_photo(image, f'Страница документа: {index + 1}')
-                await bot.send_media_group(CHAT_ID,
-                                           media=MEDIA)
-    KEYBOARD.add('Назад')
-    await bot.send_message(CHAT_ID,
-                           text=f'Дата обновления на сайте: {date}',
-                           reply_markup=KEYBOARD)
+    try:
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state("start")
+        CHAT_ID = message.chat.id
+        date = None
+        MEDIA = types.MediaGroup()
+        KEYBOARD = ReplyKeyboardMarkup(resize_keyboard=True,
+                                    one_time_keyboard=False)
+        async with state.proxy() as data:
+            selectedInstitudeFiles = data['selectedInstitudeFiles']
+        for value in selectedInstitudeFiles:
+            if value['file_name'] == message.text:
+                await bot.send_message(CHAT_ID, text="Идет загрузка, пожалуйста подождите...")
+                file, date = getFileAndLastModifiedDate(value['file_link'])
+                listOfBytesImages, countOfImages = ConvertPDFtoPNG(file)
+                if countOfImages > 10:
+                    await bot.send_message(message.chat.id,
+                                        text=(f'В файле {countOfImages} изображений, расписание будет'
+                                                + f' отправлено порционно.'))
+                    countTensFiles = countOfImages // 10
+                    residueCountTensFiles = countOfImages % 10
+                    currentNumberOfTensFiles = 0
+                    print(countTensFiles, residueCountTensFiles)
+                    for cTF in range(countTensFiles):
+                        MEDIACTF = types.MediaGroup()
+                        for cTFP in range(10):
+                            bPhoto = listOfBytesImages[currentNumberOfTensFiles]
+                            MEDIACTF.attach_photo(bPhoto, f'Страница документа: {currentNumberOfTensFiles + 1}')
+                            currentNumberOfTensFiles += 1
+                        await bot.send_media_group(message.from_user.id, MEDIACTF)
+                    if residueCountTensFiles:
+                        MEDIACTFR = types.MediaGroup()
+                        for cTFR in range(countOfImages)[-residueCountTensFiles:]:
+                            bPhoto = listOfBytesImages[cTFR]
+                            MEDIACTFR.attach_photo(bPhoto, f'Страница документа: {cTFR + 1}')
+                        await bot.send_media_group(message.from_user.id, MEDIACTFR)
+                else:
+                    for index, image in enumerate(listOfBytesImages):
+                        MEDIA.attach_photo(image, f'Страница документа: {index + 1}')
+                    await bot.send_media_group(CHAT_ID,
+                                            media=MEDIA)
+        KEYBOARD.add('Назад')
+        await bot.send_message(CHAT_ID,
+                            text=f'Дата обновления на сайте: {date}',
+                            reply_markup=KEYBOARD)
+    except Exception as error:
+        print(error)

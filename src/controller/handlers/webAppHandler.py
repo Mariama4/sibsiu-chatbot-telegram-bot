@@ -1,10 +1,13 @@
-from aiogram.types import ParseMode, InlineKeyboardButton
+from aiogram.types import ParseMode, InlineKeyboardButton, ReplyKeyboardMarkup
 from aiogram.types.web_app_info import WebAppInfo
-from src.controller.handlers.utils import keyboardBuilder
 
 
 async def webAppHandler(data, message):
-    keyboard = keyboardBuilder(data['markup'])
+    keyboard = ReplyKeyboardMarkup(
+        resize_keyboard=True,
+        one_time_keyboard=False
+    )
+
     keyboard.add(
         InlineKeyboardButton(
             text=data['web_app_button_text'],
@@ -13,6 +16,17 @@ async def webAppHandler(data, message):
             )
         )
     )
+
+    list(
+        map(
+            lambda x:
+            keyboard.add(
+                InlineKeyboardButton(text=x['text'])
+            ),
+            data['markup']
+        )
+    )
+
     return await message.answer(
         text=data['web_app_caption'],
         parse_mode=ParseMode.HTML,
