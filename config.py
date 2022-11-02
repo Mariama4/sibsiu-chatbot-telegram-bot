@@ -13,7 +13,7 @@ from src.stored_frames.controller import *
 load_dotenv()
 
 logging.basicConfig(
-    # filename="logs.log",
+    filename="logs.log",
     level=logging.NOTSET,
     format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
 )
